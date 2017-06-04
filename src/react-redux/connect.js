@@ -9,7 +9,6 @@ export default function(mapDispatchToProps, mapStateToProps) {
         this.context.store.subscribe( () => this.forceUpdate());
       }
       render() {
-        console.log(this)
         const {context, props} = this;
         const propsFromDispatch = mapDispatchToProps(context.store.dispatch);
         const propsFromState = mapStateToProps(context.store.getState());
