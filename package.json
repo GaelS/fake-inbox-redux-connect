@@ -1,5 +1,5 @@
 {
-  "name": "fake-inbox-redux",
+  "name": "fake-inbox-redux-connect",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "faker": "^4.1.0",
+    "prop-types": "^15.5.10",
     "react": "^15.5.3",
     "react-dom": "^15.5.3",
     "react-semantic-ui": "^0.2.0",

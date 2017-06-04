@@ -2,15 +2,22 @@ import React, { Component } from 'react';
 import Mail from './Mail';
 import { Icon, Label } from 'semantic-ui-react';
 
-//import generateMails from './utils';
-import S from './styles';
-import store from './redux/store';
-import { addMail, removeMail, markMailAsRead } from './redux/actions';
-class App extends Component {
+import { connect } from "./react-redux/react-redux";
 
-  componentDidMount() {
-    store.subscribe(() => this.forceUpdate());
-  };
+import S from './styles';
+
+import { addMail, removeMail, markMailAsRead } from './redux/actions';
+
+const mapDispatchToProps = (dispatch) => ({
+  addMail: () => dispatch(addMail()),
+  removeMail: index => dispatch(removeMail(index)),
+  markMailAsRead: index => dispatch(markMailAsRead(index)),
+});
+const mapStateToProps = (state) => ({
+  mails: state.mails,
+});
+
+class App extends Component {
 
   //Fake refresh button and add random mails each time
   // it is clicked
@@ -18,12 +25,18 @@ class App extends Component {
     //Calculate random number between 1 and 5
     const newMails = Math.round(Math.random() * 4) + 1; 
     for(let i = 0; i < newMails; i++) {
-      store.dispatch(addMail());
+      this.props.addMail();
     };
   };
 
   render() {
-    const mails = store.getState().mails;
+    const {
+      mails,
+      addMail,
+      removeMail,
+      markMailAsRead,
+    } = this.props;
+
     const unreadMails = mails.filter(mail => !mail.read);
 
     return (
@@ -57,11 +70,18 @@ class App extends Component {
         </div>
         {mails.length === 0 && <div style={S.centeredContainer}><div>No new mail, have a good day !</div></div>}
         { mails.map( (mail, index) => (
-          <Mail key={mail.object} mail={mail} index={index} onDelete={ () => store.dispatch(removeMail(index)) } onClickAsRead={ () => store.dispatch(markMailAsRead(index))} />) 
-        ) }
+            <Mail 
+              key={mail.object}
+              mail={mail} 
+              index={index}
+              onDelete={ () => removeMail(index) }  
+              onClickAsRead={ () => markMailAsRead(index)}
+            />
+          ))
+        }
       </div>
     );
   }
 }
 
-export default App;
+export default connect(mapDispatchToProps, mapStateToProps)(App);
